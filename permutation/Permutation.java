@@ -48,8 +48,11 @@ public class Permutation{
     String inputString = br.readLine();
     String[] inputStringArray = inputString.split(",");
     int[] inputArray = new int[inputStringArray.length];
+<<<<<<< 372b19230807d17e1a55052148d777093405b38d
 //In case you want to permute string please remove integer conversion part and
 //adjust return types to that of String types
+=======
+>>>>>>> added new algorithm with two dimensinal list
     for(int i=0;i<inputStringArray.length;i++){
       inputArray[i]=new Integer(inputStringArray[i]);
     }

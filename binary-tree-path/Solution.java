@@ -1,41 +1,31 @@
 public class Solution {
   public List<String> binaryTreePaths(TreeNode root) {
-    List<String> pathList = new ArrayList<>();
-    if(root.left==null && root.right==null){
-      pathList.add(Integer.toString(root.val));
-      return pathList;
-    }
-    StringBuffer intermediatePath = new StringBuffer();
-    Stack<TreeNode> stack = new Stack<>();
-    stack.push(root);
-    intermediatePath.append(root.val);
-    return findBinaryTreePaths(root,intermediatePath,pathList,stack);
+    List<String> finalPaths = new ArrayList<>();
+    if(root==null) return finalPaths;
+    if(root.left==null && root.right==null) finalPaths.add(new Integer(root.val).toString());
+    Deque<Integer> tempStack = new ArrayDeque<>();
+    findBinaryPaths(root,tempStack, finalPaths);
+    return finalPaths;
   }
-
-  public List<String> findBinaryTreePaths(TreeNode node, StringBuffer intermediatePath, List<String> pathList, Stack<TreeNode> stack){
-    if(node.left ==null && node.right==null){
-      pathList.add(intermediatePath.toString());
-      int index = intermediatePath.lastIndexOf("-");
-      intermediatePath.delete(index,intermediatePath.length());
-      stack.pop();
-    }
-    if(node.left!=null){
-      TreeNode newNode = node.left;
-      if(stack.search(newNode)!=1){
-        stack.push(newNode);
-        intermediatePath.append("->").append(newNode.val);
+  public void findBinaryPaths(TreeNode node, Deque<Integer> nodeValues,List<String> finalPaths){
+    if((node.left==null) && (node.right==null)){
+      nodeValues.push(node.val);
+      StringBuffer stringBuffer = new StringBuffer();
+      Iterator<Integer> iterator = nodeValues.descendingIterator();
+      while(iterator.hasNext()){
+        stringBuffer.append(new Integer(iterator.next()).toString());
+        if(iterator.hasNext())stringBuffer.append("->");
       }
-      findBinaryTreePaths(newNode,intermediatePath,pathList,stack);
+      if(!finalPaths.contains(stringBuffer.toString()))
+        finalPaths.add(stringBuffer.toString());
+      nodeValues.pop();
+      return;
     }
-    if(node.right!=null){
-      TreeNode newNode = node.right;
-      if(stack.search(newNode)!=1){
-        stack.push(newNode);
-        intermediatePath.append("->").append(newNode.val);
-      }
-      findBinaryTreePaths(newNode,intermediatePath,pathList,stack);
-    }
-
-    return pathList;
+    nodeValues.push(node.val);
+    if(node.left !=null)
+      findBinaryPaths(node.left,nodeValues,finalPaths);
+    if(node.right!=null)
+      findBinaryPaths(node.right,nodeValues,finalPaths);
+    nodeValues.pop();
   }
 }

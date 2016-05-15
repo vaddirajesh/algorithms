@@ -14,9 +14,10 @@ public class RBBST<Key extends Comparable<Key>, Value>{
     private Node left, right;
     boolean color;
 
-    public Node(Key key , Value value){
+    public Node(Key key , Value value , boolean color ){
       this.key = key;
       this.value = value;
+      this.color = color;
     }
   }
   private Node root;
@@ -138,7 +139,7 @@ public class RBBST<Key extends Comparable<Key>, Value>{
    *
    **/ 
   private Node put(Node root, Key key , Value value){
-      if(root==null) return new Node(key, value);
+      if(root==null) return new Node(key, value,RED);
       int comp = key.compareTo(root.key);
       if(comp < 0)
         root.left = put(root.left,key,value);
@@ -146,7 +147,10 @@ public class RBBST<Key extends Comparable<Key>, Value>{
         root.right = put(root.right,key,value);
       else
         root.value = value;
-      root.count = 1+size(root.left)+size(root.right);
+      
+      if(isRed(root.right) && !isRed(root.left)) root = rotateLeft(root);
+      if(isRed(root.left) && isRed(root.left.left)) root = rotateRight(root);
+      if(isRed(root.left) && isRed(root.right) ) flipColors(root);
       return root;
   }
   /**
@@ -234,5 +238,17 @@ public class RBBST<Key extends Comparable<Key>, Value>{
     x.color = node.color;
     node.color= RED;
     return x;
+  }
+  /**
+   *
+   *
+   * */
+  private void flipColors(Node node){
+    assert !isRed(node);
+    assert isRed(node.left);
+    assert isRed(node.right);
+    node.color = RED;
+    node.left.color = BLACK;
+    node.right.color = BLACK;
   }
 }
